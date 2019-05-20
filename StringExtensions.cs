@@ -118,9 +118,9 @@ namespace Extensions
                     options: RegexOptions.IgnoreCase
                         | RegexOptions.IgnorePatternWhitespace
                         | RegexOptions.Multiline)
-                    .Where(p => !p.IsEmpty());
+                    .Where(p => !p.IsEmpty()).ToArray();
 
-                var count = parts
+                var fullLength = parts
                     .Sum(p => p.Length);
 
                 var builder = new StringBuilder();
@@ -133,14 +133,14 @@ namespace Extensions
                         replacement: string.Empty,
                         options: RegexOptions.IgnoreCase | RegexOptions.Multiline);
 
-                    var partShare = (double)part.Length / count;
-                    var partLength = (int)Math.Ceiling(
-                            (length - builder.Length) * (p == parts.Last() ? 1 : partShare));
+                    var partShare =
+                        (double)part.Length / fullLength;
+                    var partLength =
+                        (int)Math.Ceiling((length - builder.Length) * (p == parts.Last() ? 1 : partShare));
 
-                    var current =
-                        partLength < part.Length ?
-                        part.Substring(0, partLength) :
-                        part;
+                    var current = partLength < part.Length
+                        ? part.Substring(0, partLength)
+                        : part;
                     builder.Append(current);
 
                     if (builder.Length >= length)
@@ -149,10 +149,9 @@ namespace Extensions
                     }
                 }
 
-                result =
-                    builder.Length > length ?
-                    builder.ToString().Substring(0, length) :
-                    builder.ToString();
+                result = builder.Length > length
+                    ? builder.ToString().Substring(0, length)
+                    : builder.ToString();
             }
 
             return result;
