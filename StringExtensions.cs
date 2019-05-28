@@ -43,18 +43,19 @@ namespace Extensions
         }
 
         public static string Join<T>
-            (this IEnumerable<T> values, string delimiter = ",")
+            (this IEnumerable<T> values, string delimiter = ",", bool distinct = false)
         {
             var result = new StringBuilder();
 
             if (values != null)
             {
-                var distincted = values
-                    .Distinct().ToArray();
+                var resulting = distinct
+                    ? values.Distinct().ToArray()
+                    : values.ToArray();
 
-                foreach (var d in distincted)
+                foreach (var value in resulting)
                 {
-                    var current = d?.ToString().Trim();
+                    var current = value?.ToString().Trim();
 
                     if (!current.IsEmpty())
                     {
@@ -71,24 +72,28 @@ namespace Extensions
             return result.ToString();
         }
 
-        public static string Join
-            (string delimiter, params string[] values)
+        public static string Merge<T>
+            (this IEnumerable<T> values, string delimiter = ",")
         {
-            return values.Join(delimiter);
+            return values.Join(
+                delimiter: delimiter,
+                distinct: true);
         }
 
-        public static string Join<T, TProp>
+        public static string Merge
+            (string delimiter, params string[] values)
+        {
+            return values.Merge(delimiter);
+        }
+
+        public static string Merge<T, TProp>
             (this IEnumerable<T> items, Func<T, TProp> property,
             string delimiter = ",")
         {
-            var values = items
-                .Select(i => property?.Invoke(i)?.ToString()
-                    ?? i?.ToString())
-                .Distinct()
+            return items
+                .Select(i => property?.Invoke(i)?.ToString() ?? i?.ToString())
                 .Where(i => !i.IsEmpty())
-                .ToArray();
-
-            return values.Join(delimiter);
+                .Merge(delimiter);
         }
 
         public static string Repeat(this string value, int count)
