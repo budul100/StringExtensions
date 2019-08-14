@@ -11,29 +11,25 @@ namespace Extensions
         #region Private Fields
 
         private const string ShrinkRemove = @"(?<!\b[AEIOUÄÖÜ]*)[AEIOUÄÖÜ]|\s|\<\>";
-
         private const string ShrinkSplitAt = @"[_\W]";
 
         #endregion Private Fields
 
         #region Public Methods
 
-        public static bool IsAllDigits
-            (this string value)
+        public static bool IsAllDigits(this string value)
         {
             var result = value?.All(char.IsDigit) ?? true;
 
             return result;
         }
 
-        public static bool IsEmpty
-            (this string value)
+        public static bool IsEmpty(this string value)
         {
             return string.IsNullOrWhiteSpace(value);
         }
 
-        public static bool IsEqualOrEmpty
-            (this string current, string other)
+        public static bool IsEqualOrEmpty(this string current, string other)
         {
             var result = current.IsEmpty()
                 || other.IsEmpty()
@@ -42,8 +38,7 @@ namespace Extensions
             return result;
         }
 
-        public static string Join<T>
-            (this IEnumerable<T> values, string delimiter = ",", bool distinct = false)
+        public static string Join<T>(this IEnumerable<T> values, string delimiter = ",", bool distinct = false)
         {
             var result = new StringBuilder();
 
@@ -59,7 +54,8 @@ namespace Extensions
 
                     if (!current.IsEmpty())
                     {
-                        if (result.Length > 0 && !delimiter.IsEmpty())
+                        // Delimiter can be whitespace, e.g. a line break
+                        if (result.Length > 0 && delimiter != null)
                         {
                             result.Append(delimiter);
                         }
@@ -72,28 +68,24 @@ namespace Extensions
             return result.ToString();
         }
 
-        public static string Merge<T>
-            (this IEnumerable<T> values, string delimiter = ",")
-        {
-            return values.Join(
-                delimiter: delimiter,
-                distinct: true);
-        }
-
-        public static string Merge
-            (string delimiter, params string[] values)
+        public static string Merge(string delimiter, params string[] values)
         {
             return values.Merge(delimiter);
         }
 
-        public static string Merge<T, TProp>
-            (this IEnumerable<T> items, Func<T, TProp> property,
-            string delimiter = ",")
+        public static string Merge<T, TProp>(this IEnumerable<T> items, Func<T, TProp> property, string delimiter = ",")
         {
             return items
                 .Select(i => property?.Invoke(i)?.ToString() ?? i?.ToString())
                 .Where(i => !i.IsEmpty())
                 .Merge(delimiter);
+        }
+
+        public static string Merge<T>(this IEnumerable<T> values, string delimiter = ",")
+        {
+            return values.Join(
+                delimiter: delimiter,
+                distinct: true);
         }
 
         public static string Repeat(this string value, int count)
@@ -110,8 +102,7 @@ namespace Extensions
             return result;
         }
 
-        public static string Shrink
-            (this string value, int length)
+        public static string Shrink(this string value, int length)
         {
             var result = value;
 
@@ -160,30 +151,6 @@ namespace Extensions
             }
 
             return result;
-        }
-
-        public static IEnumerable<T> Split<T>
-            (this string value, string delimiter, bool excludeEmpties = false)
-        {
-            return value.Split<T>(
-                delimiter: delimiter[0],
-                excludeEmpties: excludeEmpties).ToArray();
-        }
-
-        public static IEnumerable<T> Split<T>
-            (this string value, char delimiter, bool excludeEmpties = false)
-        {
-            if (!value.IsEmpty())
-            {
-                var splitted = value
-                    .Split(delimiter)
-                    .Where(v => !(excludeEmpties && v.IsEmpty())).ToArray();
-
-                foreach (var s in splitted)
-                {
-                    yield return s.Trim().Convert<string, T>();
-                }
-            }
         }
 
         #endregion Public Methods

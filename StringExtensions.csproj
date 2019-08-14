@@ -9,8 +9,4 @@
     <None Remove=".gitignore" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ConverterExtensions\ConverterExtensions.csproj" />
-  </ItemGroup>
-
 </Project>
