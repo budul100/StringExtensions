@@ -17,6 +17,26 @@ namespace Extensions
 
         #region Public Methods
 
+        public static string Add<T>(this string given, T value, string delimiter = ",")
+        {
+            var result = new StringBuilder(given);
+
+            var current = value?.ToString().Trim();
+
+            if (!current.IsEmpty())
+            {
+                // Delimiter can be whitespace, e.g. a line break
+                if (result.Length > 0 && delimiter != null)
+                {
+                    result.Append(delimiter);
+                }
+
+                result.Append(current);
+            }
+
+            return result.ToString();
+        }
+
         public static bool IsAllDigits(this string value)
         {
             var result = value?.All(char.IsDigit) ?? true;
