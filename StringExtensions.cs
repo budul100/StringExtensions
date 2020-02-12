@@ -122,11 +122,11 @@ namespace Extensions
             return result;
         }
 
-        public static string Shrink(this string value, int length)
+        public static string Shrink(this string value, int length = 0)
         {
             var result = value;
 
-            if (!value.IsEmpty() && length > 0 && value.Length > length)
+            if (!value.IsEmpty() && (length == 0 || value.Length > length))
             {
                 var parts = Regex.Split(
                     input: value.ToUpper(),
@@ -141,31 +141,38 @@ namespace Extensions
 
                 var builder = new StringBuilder();
 
-                foreach (string p in parts)
+                foreach (var part in parts)
                 {
-                    var part = Regex.Replace(
-                        input: p,
+                    var corrected = Regex.Replace(
+                        input: part,
                         pattern: ShrinkRemove,
                         replacement: string.Empty,
                         options: RegexOptions.IgnoreCase | RegexOptions.Multiline);
 
-                    var partShare =
-                        (double)part.Length / fullLength;
-                    var partLength =
-                        (int)Math.Ceiling((length - builder.Length) * (p == parts.Last() ? 1 : partShare));
-
-                    var current = partLength < part.Length
-                        ? part.Substring(0, partLength)
-                        : part;
-                    builder.Append(current);
-
-                    if (builder.Length >= length)
+                    if (length == 0)
                     {
-                        break;
+                        builder.Append(corrected);
+                    }
+                    else
+                    {
+                        var partShare =
+                            (double)corrected.Length / fullLength;
+                        var partLength =
+                            (int)Math.Ceiling((length - builder.Length) * (part == parts.Last() ? 1 : partShare));
+
+                        var shortened = partLength < corrected.Length
+                            ? corrected.Substring(0, partLength)
+                            : corrected;
+                        builder.Append(shortened);
+
+                        if (builder.Length >= length)
+                        {
+                            break;
+                        }
                     }
                 }
 
-                result = builder.Length > length
+                result = length > 0 && builder.Length > length
                     ? builder.ToString().Substring(0, length)
                     : builder.ToString();
             }
