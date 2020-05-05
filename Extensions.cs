@@ -17,11 +17,11 @@ namespace StringExtensions
 
         #region Public Methods
 
-        public static string Add<T>(this string given, T value, string delimiter = ",")
+        public static string Add(this string given, string value, string delimiter = ",")
         {
             var result = new StringBuilder(given);
 
-            var current = value?.ToString().Trim();
+            var current = value?.Trim();
 
             if (!current.IsEmpty())
             {
@@ -37,11 +37,11 @@ namespace StringExtensions
             return result.ToString();
         }
 
-        public static string AddOnce<T>(this string given, T value, string delimiter = ",")
+        public static string AddOnce(this string given, string value, string delimiter = ",")
         {
             var result = given;
 
-            var current = value?.ToString().Trim();
+            var current = value?.Trim();
 
             if (!current.IsEmpty())
             {
@@ -83,24 +83,20 @@ namespace StringExtensions
 
         public static string Join<T>(string delimiter = ",", params string[] values)
         {
-            return values.Join(
-                delimiter: delimiter,
-                distinct: false);
+            var result = values.Join(delimiter);
+
+            return result;
         }
 
-        public static string Join<T>(this IEnumerable<T> values, string delimiter = ",", bool distinct = false)
+        public static string Join(this IEnumerable<string> values, string delimiter = ",")
         {
             var result = new StringBuilder();
 
-            if (values != null)
+            if (values?.Any() ?? false)
             {
-                var resulting = distinct
-                    ? values.Distinct().ToArray()
-                    : values.ToArray();
-
-                foreach (var value in resulting)
+                foreach (var value in values)
                 {
-                    var current = value?.ToString()?.Trim();
+                    var current = value?.Trim();
 
                     if (!current.IsEmpty())
                     {
@@ -118,52 +114,27 @@ namespace StringExtensions
             return result.ToString();
         }
 
-        public static string Merge(string delimiter, params string[] values)
-        {
-            return values.Merge(delimiter);
-        }
-
-        public static string Merge<T, TProp>(this IEnumerable<T> items, Func<T, TProp> property, string delimiter = ",")
-        {
-            var result = default(string);
-
-            if (items?.Any() ?? false)
-            {
-                result = items
-                    .Select(i => i.GetProperty(property))
-                    .Where(i => !i.IsEmpty())
-                    .Merge(delimiter);
-            }
-
-            return result;
-        }
-
-        public static string Merge<T>(this IEnumerable<T> values, string delimiter = ",")
-        {
-            return values.Join(
-                delimiter: delimiter,
-                distinct: true);
-        }
-
         public static string Repeat(this string value, int count)
         {
-            var result = string.Empty;
+            var result = new StringBuilder();
 
             if (count > 0)
             {
-                result = new StringBuilder(value.Length * count)
-                    .Insert(0, value, count)
-                    .ToString();
+                result.Insert(
+                    index: 0,
+                    value: value,
+                    count: count);
             }
 
-            return result;
+            return result.ToString();
         }
 
         public static string Shrink(this string value, int length = 0)
         {
-            var result = value;
+            var result = value?.Trim();
 
-            if (!value.IsEmpty() && (length == 0 || value.Length > length))
+            if (!result.IsEmpty()
+                && (length == 0 || value.Length > length))
             {
                 var parts = Regex.Split(
                     input: value.ToUpper(),
@@ -216,17 +187,5 @@ namespace StringExtensions
         }
 
         #endregion Public Methods
-
-        #region Private Methods
-
-        private static string GetProperty<T, TProp>(this T item, Func<T, TProp> property)
-        {
-            var result = property?.Invoke(item)?.ToString()
-                ?? item?.ToString();
-
-            return result;
-        }
-
-        #endregion Private Methods
     }
 }
