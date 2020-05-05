@@ -10,7 +10,7 @@ namespace StringExtensions
     {
         #region Private Fields
 
-        private const string ShrinkRemove = @"(?<!\b[AEIOUÄÖÜ]*)[AEIOUÄÖÜ]|\s|\<\>";
+        private const string ShrinkRemove = @"(?<!\b[aeiuoäöü]*)[aeiouäöü]|\s|\<\>";
         private const string ShrinkSplitAt = @"[_\W]";
 
         #endregion Private Fields
@@ -137,7 +137,7 @@ namespace StringExtensions
                 && (length == 0 || value.Length > length))
             {
                 var parts = Regex.Split(
-                    input: value.ToUpper(),
+                    input: result,
                     pattern: ShrinkSplitAt,
                     options: RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline)
                     .Where(p => !p.IsEmpty()).ToArray();
@@ -162,13 +162,18 @@ namespace StringExtensions
                     else
                     {
                         var partShare = (double)part.Length / fullLength;
+
                         var partLength = part == parts.Last()
                             ? length - builder.Length
                             : (int)Math.Ceiling(length * partShare);
+                        var currentLength = partLength < corrected.Length
+                            ? partLength
+                            : corrected.Length;
 
-                        var shortened = partLength < corrected.Length
-                            ? corrected.Substring(0, partLength)
-                            : corrected;
+                        var shortened = corrected.Substring(
+                            startIndex: 0,
+                            length: currentLength);
+
                         builder.Append(shortened);
 
                         if (builder.Length >= length)
