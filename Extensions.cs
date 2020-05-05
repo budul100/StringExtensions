@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Extensions
+namespace StringExtensions
 {
-    public static class StringExtensions
+    public static class Extensions
     {
         #region Private Fields
 
@@ -37,6 +37,29 @@ namespace Extensions
             return result.ToString();
         }
 
+        public static string AddOnce<T>(this string given, T value, string delimiter = ",")
+        {
+            var result = given;
+
+            var current = value?.ToString().Trim();
+
+            if (!current.IsEmpty())
+            {
+                if (given.IsEmpty())
+                {
+                    result = current;
+                }
+                else if (!given.Contains(current))
+                {
+                    result = given.Add(
+                        value: value,
+                        delimiter: delimiter);
+                }
+            }
+
+            return result;
+        }
+
         public static bool IsAllDigits(this string value)
         {
             var result = value?.All(char.IsDigit) ?? true;
@@ -58,6 +81,13 @@ namespace Extensions
             return result;
         }
 
+        public static string Join<T>(string delimiter = ",", params string[] values)
+        {
+            return values.Join(
+                delimiter: delimiter,
+                distinct: false);
+        }
+
         public static string Join<T>(this IEnumerable<T> values, string delimiter = ",", bool distinct = false)
         {
             var result = new StringBuilder();
@@ -70,7 +100,7 @@ namespace Extensions
 
                 foreach (var value in resulting)
                 {
-                    var current = value?.ToString().Trim();
+                    var current = value?.ToString()?.Trim();
 
                     if (!current.IsEmpty())
                     {
@@ -95,10 +125,17 @@ namespace Extensions
 
         public static string Merge<T, TProp>(this IEnumerable<T> items, Func<T, TProp> property, string delimiter = ",")
         {
-            return items
-                .Select(i => property?.Invoke(i)?.ToString() ?? i?.ToString())
-                .Where(i => !i.IsEmpty())
-                .Merge(delimiter);
+            var result = default(string);
+
+            if (items?.Any() ?? false)
+            {
+                result = items
+                    .Select(i => i.GetProperty(property))
+                    .Where(i => !i.IsEmpty())
+                    .Merge(delimiter);
+            }
+
+            return result;
         }
 
         public static string Merge<T>(this IEnumerable<T> values, string delimiter = ",")
@@ -131,9 +168,7 @@ namespace Extensions
                 var parts = Regex.Split(
                     input: value.ToUpper(),
                     pattern: ShrinkSplitAt,
-                    options: RegexOptions.IgnoreCase
-                        | RegexOptions.IgnorePatternWhitespace
-                        | RegexOptions.Multiline)
+                    options: RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline)
                     .Where(p => !p.IsEmpty()).ToArray();
 
                 var fullLength = parts
@@ -155,10 +190,10 @@ namespace Extensions
                     }
                     else
                     {
-                        var partShare =
-                            (double)corrected.Length / fullLength;
-                        var partLength =
-                            (int)Math.Ceiling((length - builder.Length) * (part == parts.Last() ? 1 : partShare));
+                        var partShare = (double)part.Length / fullLength;
+                        var partLength = part == parts.Last()
+                            ? length - builder.Length
+                            : (int)Math.Ceiling(length * partShare);
 
                         var shortened = partLength < corrected.Length
                             ? corrected.Substring(0, partLength)
@@ -181,5 +216,17 @@ namespace Extensions
         }
 
         #endregion Public Methods
+
+        #region Private Methods
+
+        private static string GetProperty<T, TProp>(this T item, Func<T, TProp> property)
+        {
+            var result = property?.Invoke(item)?.ToString()
+                ?? item?.ToString();
+
+            return result;
+        }
+
+        #endregion Private Methods
     }
 }
