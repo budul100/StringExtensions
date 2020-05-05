@@ -81,7 +81,7 @@ namespace StringExtensions
             return result;
         }
 
-        public static string Join<T>(string delimiter = ",", params string[] values)
+        public static string Join(string delimiter = ",", params string[] values)
         {
             var result = values.Join(delimiter);
 
