@@ -11,8 +11,8 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/budul100/StringExtensions</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageTags>Regex, Regular expressions</PackageTags>
-    <Description>Multiple extension methods to adjust or manipulate strings.</Description>
+    <PackageTags>String, String extensions, String helpers</PackageTags>
+    <Description>Multiple extension methods to adjust or manipulate strings</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
