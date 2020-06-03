@@ -129,12 +129,43 @@ namespace StringExtensions
             return result.ToString();
         }
 
-        public static string Shrink(this string value, int length = 0)
+        public static string Shorten(this string value, int maxLength)
+        {
+            if (maxLength < 1)
+            {
+                throw new ArgumentException(
+                    message: "The maximum length must be greater than 0.",
+                    paramName: nameof(maxLength));
+            }
+
+            var result = GetShrinked(
+                value: value,
+                maxLength: maxLength,
+                removeWhitespaces: false);
+
+            return result;
+        }
+
+        public static string Shrink(this string value, int maxLength = 0)
+        {
+            var result = GetShrinked(
+                value: value,
+                maxLength: maxLength,
+                removeWhitespaces: true);
+
+            return result;
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private static string GetShrinked(string value, int maxLength, bool removeWhitespaces)
         {
             var result = value?.Trim();
 
             if (!result.IsEmpty()
-                && (length == 0 || value.Length > length))
+                && (removeWhitespaces || maxLength == 0 || value.Length > maxLength))
             {
                 var parts = Regex.Split(
                     input: result,
@@ -155,7 +186,7 @@ namespace StringExtensions
                         replacement: string.Empty,
                         options: RegexOptions.IgnoreCase | RegexOptions.Multiline);
 
-                    if (length == 0)
+                    if (maxLength == 0)
                     {
                         builder.Append(corrected);
                     }
@@ -164,8 +195,8 @@ namespace StringExtensions
                         var partShare = (double)part.Length / fullLength;
 
                         var partLength = part == parts.Last()
-                            ? length - builder.Length
-                            : (int)Math.Ceiling(length * partShare);
+                            ? maxLength - builder.Length
+                            : (int)Math.Ceiling(maxLength * partShare);
                         var currentLength = partLength < corrected.Length
                             ? partLength
                             : corrected.Length;
@@ -176,21 +207,21 @@ namespace StringExtensions
 
                         builder.Append(shortened);
 
-                        if (builder.Length >= length)
+                        if (builder.Length >= maxLength)
                         {
                             break;
                         }
                     }
                 }
 
-                result = length > 0 && builder.Length > length
-                    ? builder.ToString().Substring(0, length)
+                result = maxLength > 0 && builder.Length > maxLength
+                    ? builder.ToString().Substring(0, maxLength)
                     : builder.ToString();
             }
 
             return result;
         }
 
-        #endregion Public Methods
+        #endregion Private Methods
     }
 }
