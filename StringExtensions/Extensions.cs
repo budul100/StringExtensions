@@ -131,7 +131,7 @@ namespace StringExtensions
             return result.ToString();
         }
 
-        public static string Shorten(this string value, int maxLength)
+        public static string Shorten(this string value, int maxLength, bool shrinkIfNecessary = false)
         {
             if (maxLength < 1)
             {
@@ -140,10 +140,24 @@ namespace StringExtensions
                     paramName: nameof(maxLength));
             }
 
-            var result = GetShrinked(
-                value: value,
-                maxLength: maxLength,
-                removeWhitespaces: false);
+            var result = value;
+
+            if ((value?.Length ?? 0) > maxLength)
+            {
+                if (shrinkIfNecessary)
+                {
+                    result = GetShrinked(
+                        value: value,
+                        maxLength: maxLength,
+                        removeWhitespaces: false);
+                }
+                else
+                {
+                    result = value.Substring(
+                        startIndex: 0,
+                        length: maxLength);
+                }
+            }
 
             return result;
         }
