@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -156,9 +157,61 @@ namespace StringExtensions
             return result;
         }
 
+        public static IEnumerable<T> Split<T>(this string value, string delimiters, bool excludeEmpties = false)
+        {
+            var separators = delimiters.ToCharArray();
+
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                var splits = value
+                    .Split(separators)
+                    .Where(v => !(excludeEmpties && !string.IsNullOrWhiteSpace(v))).ToArray();
+
+                foreach (var split in splits)
+                {
+                    var result = split.Trim().Convert<T>();
+
+                    yield return result;
+                }
+            }
+        }
+
+        public static IEnumerable<T> Split<T>(this string value, char delimiter, bool excludeEmpties = false)
+        {
+            var result = value.Split<T>(
+                delimiters: delimiter.ToString(),
+                excludeEmpties: excludeEmpties).ToArray();
+
+            return result;
+        }
+
         #endregion Public Methods
 
         #region Private Methods
+
+        private static T Convert<T>(this string input)
+        {
+            object result = default(T);
+
+            if (typeof(T) == typeof(string))
+            {
+                result = input;
+            }
+            else
+            {
+                var type = Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T);
+
+                if (!input.IsEmpty())
+                {
+                    result = System.Convert.ChangeType(
+                        value: input,
+                        conversionType: type,
+                        provider: CultureInfo.CurrentCulture);
+                }
+            }
+
+            return (T)result;
+        }
 
         private static string GetShrinked(string value, int maxLength, bool removeWhitespaces)
         {
