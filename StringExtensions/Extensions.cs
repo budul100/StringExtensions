@@ -26,8 +26,9 @@ namespace StringExtensions
 
             if (!current.IsEmpty())
             {
-                // Delimiter can be whitespace, e.g. a line break
-                if (result.Length > 0 && delimiter != null)
+                // Do not use IsEmpty for the delimiter since it can be whitespace, e.g. a line break
+                if (result.Length > 0
+                    && delimiter != null)
                 {
                     result.Append(delimiter);
                 }
@@ -159,27 +160,42 @@ namespace StringExtensions
 
         public static IEnumerable<T> Split<T>(this string value, string delimiters, bool excludeEmpties = false)
         {
-            var separators = delimiters.ToCharArray();
-
-            if (!string.IsNullOrWhiteSpace(value))
+            if (!value.IsEmpty())
             {
-                var splits = value
-                    .Split(separators)
-                    .Where(v => !(excludeEmpties && !string.IsNullOrWhiteSpace(v))).ToArray();
-
-                foreach (var split in splits)
+                // Do not use IsEmpty for the delimiters since it can be whitespace, e.g. a line break
+                if (delimiters == default)
                 {
-                    var result = split.Trim().Convert<T>();
+                    if (typeof(T) == typeof(string))
+                    {
+                        yield return value.Convert<T>();
+                    }
+                }
+                else
+                {
+                    var separators = delimiters.ToCharArray();
 
-                    yield return result;
+                    var splits = value
+                        .Split(separators)
+                        .Where(v => !(excludeEmpties && !string.IsNullOrWhiteSpace(v))).ToArray();
+
+                    foreach (var split in splits)
+                    {
+                        var result = split.Trim().Convert<T>();
+
+                        yield return result;
+                    }
                 }
             }
         }
 
         public static IEnumerable<T> Split<T>(this string value, char delimiter, bool excludeEmpties = false)
         {
+            var delimiters = delimiter != default(char)
+                ? delimiter.ToString()
+                : default;
+
             var result = value.Split<T>(
-                delimiters: delimiter.ToString(),
+                delimiters: delimiters,
                 excludeEmpties: excludeEmpties).ToArray();
 
             return result;

@@ -9,7 +9,7 @@ namespace StringExtensionsTests
         #region Public Methods
 
         [Test]
-        public void SplitEmptyWithCharSeparatorToInt()
+        public void SplitEmptyWithCharDelimiterToInt()
         {
             var result = (default(string)).Split<int>(',').ToArray();
 
@@ -17,7 +17,7 @@ namespace StringExtensionsTests
         }
 
         [Test]
-        public void SplitEmptyWithCharSeparatorToString()
+        public void SplitEmptyWithCharDelimiterToString()
         {
             var result = (default(string)).Split<string>(',').ToArray();
 
@@ -25,7 +25,7 @@ namespace StringExtensionsTests
         }
 
         [Test]
-        public void SplitEmptyWithStringSeparatorToInt()
+        public void SplitEmptyWithStringDelimiterToInt()
         {
             var result = (default(string)).Split<int>(",;").ToArray();
 
@@ -33,7 +33,7 @@ namespace StringExtensionsTests
         }
 
         [Test]
-        public void SplitEmptyWithStringSeparatorToString()
+        public void SplitEmptyWithStringDelimiterToString()
         {
             var result = (default(string)).Split<string>(",;").ToArray();
 
@@ -41,7 +41,7 @@ namespace StringExtensionsTests
         }
 
         [Test]
-        public void SplitWithCharSeparatorToInt()
+        public void SplitWithCharDelimiterToInt()
         {
             var result = ("1,2,3").Split<int>(',').ToArray();
 
@@ -49,7 +49,7 @@ namespace StringExtensionsTests
         }
 
         [Test]
-        public void SplitWithCharSeparatorToString()
+        public void SplitWithCharDelimiterToString()
         {
             var result = ("1,2,3").Split<string>(',').ToArray();
 
@@ -57,7 +57,39 @@ namespace StringExtensionsTests
         }
 
         [Test]
-        public void SplitWithStringSeparatorToInt()
+        public void SplitWithEmptyCharDelimiterToInt()
+        {
+            var result = ("1,2;3").Split<int>(default(char)).ToArray();
+
+            Assert.IsTrue(result.Count() == 0);
+        }
+
+        [Test]
+        public void SplitWithEmptyCharDelimiterToString()
+        {
+            var result = ("1,2;3").Split<string>(default(char)).ToArray();
+
+            Assert.IsTrue(result.Count() == 1);
+        }
+
+        [Test]
+        public void SplitWithEmptyStringDelimiterToInt()
+        {
+            var result = ("1,2;3").Split<int>(default(string)).ToArray();
+
+            Assert.IsTrue(result.Count() == 0);
+        }
+
+        [Test]
+        public void SplitWithEmptyStringDelimiterToString()
+        {
+            var result = ("1,2;3").Split<string>(default(string)).ToArray();
+
+            Assert.IsTrue(result.Count() == 1);
+        }
+
+        [Test]
+        public void SplitWithStringDelimiterToInt()
         {
             var result = ("1,2;3").Split<int>(",;").ToArray();
 
@@ -65,7 +97,7 @@ namespace StringExtensionsTests
         }
 
         [Test]
-        public void SplitWithStringSeparatorToString()
+        public void SplitWithStringDelimiterToString()
         {
             var result = ("1,2;3").Split<string>(",;").ToArray();
 
