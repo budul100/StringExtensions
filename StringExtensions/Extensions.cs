@@ -11,7 +11,7 @@ namespace StringExtensions
     {
         #region Private Fields
 
-        private const string NewLineSeparators = "\r\n";
+        private const string NewLineSeparators = @"[\r\n]+";
         private const string ShrinkRemove = @"(?<!\b[aeiuoäöü]*)[aeiouäöü]|\s|\<\>";
         private const string ShrinkSplitAt = @"[_\W]";
 
