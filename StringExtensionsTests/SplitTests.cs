@@ -41,12 +41,23 @@ namespace StringExtensionsTests
         }
 
         [Test]
-        public void SplitLines()
+        public void SplitLinesWithExclude()
         {
             var test = @"C:\Users\m
                 C:\Users\l";
 
-            var result = test.SplitLines().ToArray();
+            var result = test.SplitLines(true).ToArray();
+
+            Assert.IsTrue(result.Count() == 2);
+        }
+
+        [Test]
+        public void SplitLinesWithoutExclude()
+        {
+            var test = @"C:\Users\m
+                C:\Users\l";
+
+            var result = test.SplitLines(false).ToArray();
 
             Assert.IsTrue(result.Count() == 2);
         }

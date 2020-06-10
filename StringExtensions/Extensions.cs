@@ -190,7 +190,7 @@ namespace StringExtensions
                     var splits = Regex.Split(
                         input: value,
                         pattern: delimiters)
-                        .Where(v => !(excludeEmpties && !v.IsEmpty())).ToArray();
+                        .Where(v => !excludeEmpties || !v.IsEmpty()).ToArray();
 
                     foreach (var split in splits)
                     {
