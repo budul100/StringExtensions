@@ -11,6 +11,7 @@ namespace StringExtensions
     {
         #region Private Fields
 
+        private const string NewLineSeparators = "\r\n";
         private const string ShrinkRemove = @"(?<!\b[aeiuoäöü]*)[aeiouäöü]|\s|\<\>";
         private const string ShrinkSplitAt = @"[_\W]";
 
@@ -186,11 +187,10 @@ namespace StringExtensions
                 }
                 else
                 {
-                    var separators = delimiters.ToCharArray();
-
-                    var splits = value
-                        .Split(separators)
-                        .Where(v => !(excludeEmpties && !string.IsNullOrWhiteSpace(v))).ToArray();
+                    var splits = Regex.Split(
+                        input: value,
+                        pattern: delimiters)
+                        .Where(v => !(excludeEmpties && !v.IsEmpty())).ToArray();
 
                     foreach (var split in splits)
                     {
@@ -210,6 +210,15 @@ namespace StringExtensions
 
             var result = value.Split<T>(
                 delimiters: delimiters,
+                excludeEmpties: excludeEmpties).ToArray();
+
+            return result;
+        }
+
+        public static IEnumerable<string> SplitLines(this string value, bool excludeEmpties = false)
+        {
+            var result = value.Split<string>(
+                delimiters: NewLineSeparators,
                 excludeEmpties: excludeEmpties).ToArray();
 
             return result;

@@ -41,6 +41,16 @@ namespace StringExtensionsTests
         }
 
         [Test]
+        public void SplitLines()
+        {
+            var test = "test1\r\ntest2";
+
+            var result = test.SplitLines().ToArray();
+
+            Assert.IsTrue(result.Count() == 2);
+        }
+
+        [Test]
         public void SplitWithCharDelimiterToInt()
         {
             var result = ("1,2,3").Split<int>(',').ToArray();
@@ -91,7 +101,7 @@ namespace StringExtensionsTests
         [Test]
         public void SplitWithStringDelimiterToInt()
         {
-            var result = ("1,2;3").Split<int>(",;").ToArray();
+            var result = ("1,2;3").Split<int>("[,;]").ToArray();
 
             Assert.IsTrue(result.Count() == 3);
         }
@@ -99,7 +109,7 @@ namespace StringExtensionsTests
         [Test]
         public void SplitWithStringDelimiterToString()
         {
-            var result = ("1,2;3").Split<string>(",;").ToArray();
+            var result = ("1,2;3").Split<string>("[,;]").ToArray();
 
             Assert.IsTrue(result.Count() == 3);
         }
