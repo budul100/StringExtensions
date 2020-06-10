@@ -43,7 +43,8 @@ namespace StringExtensionsTests
         [Test]
         public void SplitLines()
         {
-            var test = "test1\r\ntest2";
+            var test = @"C:\Users\m
+                C:\Users\l";
 
             var result = test.SplitLines().ToArray();
 
