@@ -63,6 +63,26 @@ namespace StringExtensionsTests
         }
 
         [Test]
+        public void SplitMatchingLength()
+        {
+            var given = "0000";
+
+            var result = given.Split(2).ToArray();
+
+            Assert.IsTrue(result.Count() == 2);
+        }
+
+        [Test]
+        public void SplitNonMatchingLength()
+        {
+            var given = "00000";
+
+            var result = given.Split(2).ToArray();
+
+            Assert.IsTrue(result.Count() == 3);
+        }
+
+        [Test]
         public void SplitWithCharDelimiterToInt()
         {
             var result = ("1,2,3").Split<int>(',').ToArray();

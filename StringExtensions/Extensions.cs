@@ -215,6 +215,30 @@ namespace StringExtensions
             return result;
         }
 
+        public static IEnumerable<String> Split(this string value, int length)
+        {
+            if (length <= 0)
+            {
+                throw new ArgumentException(
+                      message: "The length has to be positive.",
+                      paramName: nameof(length));
+            }
+
+            if (!value.IsEmpty())
+            {
+                for (var index = 0; index < value.Length; index += length)
+                {
+                    var currentLength = Math.Min(
+                        length,
+                        value.Length - index);
+
+                    yield return value.Substring(
+                        startIndex: index,
+                        length: currentLength);
+                }
+            }
+        }
+
         public static IEnumerable<string> SplitLines(this string value, bool excludeEmpties = false)
         {
             var result = value.Split<string>(
