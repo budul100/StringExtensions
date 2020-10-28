@@ -178,7 +178,7 @@ namespace StringExtensions
             if (!value.IsEmpty())
             {
                 // Do not use IsEmpty for the delimiters since it can be whitespace, e.g. a line break
-                if (delimiters == default)
+                if (string.IsNullOrEmpty(delimiters))
                 {
                     if (typeof(T) == typeof(string))
                     {

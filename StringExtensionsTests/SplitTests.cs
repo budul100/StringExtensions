@@ -120,6 +120,10 @@ namespace StringExtensionsTests
             var result = ("1,2;3").Split<int>(default(string)).ToArray();
 
             Assert.IsTrue(result.Count() == 0);
+
+            var result2 = ("1,2;3").Split<int>("").ToArray();
+
+            Assert.IsTrue(result2.Count() == 0);
         }
 
         [Test]
@@ -128,6 +132,10 @@ namespace StringExtensionsTests
             var result = ("1,2;3").Split<string>(default(string)).ToArray();
 
             Assert.IsTrue(result.Count() == 1);
+
+            var result2 = ("1,2;3").Split<string>("").ToArray();
+
+            Assert.IsTrue(result2.Count() == 1);
         }
 
         [Test]
