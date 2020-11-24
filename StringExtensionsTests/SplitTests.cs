@@ -92,6 +92,14 @@ namespace StringExtensionsTests
         }
 
         [Test]
+        public void SplitStringToNullableLongWithEmptyDelimiter()
+        {
+            var result = ("3").Split<long?>(default(string), true).ToArray();
+
+            Assert.IsTrue(result.Count() == 0);
+        }
+
+        [Test]
         public void SplitStringToSingleNullableLong()
         {
             var result = ("3").Split<long?>(",").ToArray();
