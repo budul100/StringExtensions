@@ -83,6 +83,23 @@ namespace StringExtensionsTests
         }
 
         [Test]
+        public void SplitStringToMultiNullableLong()
+        {
+            var result = ("4,5").Split<long?>(",").ToArray();
+
+            Assert.IsTrue(result.First() == 4);
+            Assert.IsTrue(result.Last() == 5);
+        }
+
+        [Test]
+        public void SplitStringToSingleNullableLong()
+        {
+            var result = ("3").Split<long?>(",").ToArray();
+
+            Assert.IsTrue(result.Single() == 3);
+        }
+
+        [Test]
         public void SplitWithCharDelimiterToInt()
         {
             var result = ("1,2,3").Split<int>(',').ToArray();
