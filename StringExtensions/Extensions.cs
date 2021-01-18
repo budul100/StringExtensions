@@ -132,37 +132,6 @@ namespace StringExtensions
             return result.ToString();
         }
 
-        public static string Shorten(this string value, int maxLength, bool shrinkIfNecessary = false)
-        {
-            if (maxLength < 1)
-            {
-                throw new ArgumentException(
-                    message: "The maximum length must be greater than 0.",
-                    paramName: nameof(maxLength));
-            }
-
-            var result = value;
-
-            if ((value?.Length ?? 0) > maxLength)
-            {
-                if (shrinkIfNecessary)
-                {
-                    result = GetShrinked(
-                        value: value,
-                        maxLength: maxLength,
-                        removeWhitespaces: false);
-                }
-                else
-                {
-                    result = value.Substring(
-                        startIndex: 0,
-                        length: maxLength);
-                }
-            }
-
-            return result;
-        }
-
         public static string Shrink(this string value, int maxLength = 0)
         {
             var result = GetShrinked(
@@ -244,6 +213,71 @@ namespace StringExtensions
             var result = value.Split<string>(
                 delimiters: NewLineSeparators,
                 excludeEmpties: excludeEmpties).ToArray();
+
+            return result;
+        }
+
+        public static string Truncate(this string value, int maxLength, string extension)
+        {
+            if (maxLength < 1)
+            {
+                throw new ArgumentException(
+                    message: "The maximum length must be greater than 0.",
+                    paramName: nameof(maxLength));
+            }
+
+            if (extension.IsEmpty())
+            {
+                throw new ArgumentException(
+                    message: "The truncate extension must be given.",
+                    paramName: nameof(extension));
+            }
+
+            var result = value;
+
+            maxLength = maxLength - extension.Length > 0
+                ? maxLength - extension.Length
+                : 0;
+
+            if ((value?.Length ?? 0) > maxLength)
+            {
+                result = value.Substring(
+                    startIndex: 0,
+                    length: maxLength);
+
+                result += extension;
+            }
+
+            return result;
+        }
+
+        public static string Truncate(this string value, int maxLength, bool shrinkIfNecessary = false)
+        {
+            if (maxLength < 1)
+            {
+                throw new ArgumentException(
+                    message: "The maximum length must be greater than 0.",
+                    paramName: nameof(maxLength));
+            }
+
+            var result = value;
+
+            if ((value?.Length ?? 0) > maxLength)
+            {
+                if (shrinkIfNecessary)
+                {
+                    result = GetShrinked(
+                        value: value,
+                        maxLength: maxLength,
+                        removeWhitespaces: false);
+                }
+                else
+                {
+                    result = value.Substring(
+                        startIndex: 0,
+                        length: maxLength);
+                }
+            }
 
             return result;
         }
