@@ -117,6 +117,30 @@ namespace StringExtensions
             return result.ToString();
         }
 
+        public static string RemoveAccents(this string value)
+        {
+            var result = value;
+
+            if (!value.IsEmpty())
+            {
+                var conversion = new StringBuilder();
+
+                var characters = value.Normalize(NormalizationForm.FormD).ToCharArray();
+
+                foreach (char character in characters)
+                {
+                    if (CharUnicodeInfo.GetUnicodeCategory(character) != UnicodeCategory.NonSpacingMark)
+                    {
+                        conversion.Append(character);
+                    }
+                }
+
+                result = conversion.ToString();
+            }
+
+            return result;
+        }
+
         public static string Repeat(this string value, int count)
         {
             var result = new StringBuilder();
@@ -213,6 +237,207 @@ namespace StringExtensions
             var result = value.Split<string>(
                 delimiters: NewLineSeparators,
                 excludeEmpties: excludeEmpties).ToArray();
+
+            return result;
+        }
+
+        public static string ToStandardChars(this string value)
+        {
+            var result = value;
+
+            if (!value.IsEmpty())
+            {
+                result = result.Replace('Á', 'A');
+                result = result.Replace('Ă', 'A');
+                result = result.Replace('Â', 'A');
+                result = result.Replace('Ä', 'A');
+                result = result.Replace('À', 'A');
+                result = result.Replace('Ā', 'A');
+                result = result.Replace('Ą', 'A');
+                result = result.Replace('Å', 'A');
+                result = result.Replace('Ã', 'A');
+                result = result.Replace('Æ', 'A');
+                result = result.Replace('Ć', 'C');
+                result = result.Replace('Č', 'C');
+                result = result.Replace('Ç', 'C');
+                result = result.Replace('Ĉ', 'C');
+                result = result.Replace('Ċ', 'C');
+                result = result.Replace('Ď', 'D');
+                result = result.Replace('Đ', 'D');
+                result = result.Replace('É', 'E');
+                result = result.Replace('Ĕ', 'E');
+                result = result.Replace('Ě', 'E');
+                result = result.Replace('Ê', 'E');
+                result = result.Replace('Ë', 'E');
+                result = result.Replace('Ė', 'E');
+                result = result.Replace('È', 'E');
+                result = result.Replace('Ē', 'E');
+                result = result.Replace('Ę', 'E');
+                result = result.Replace('Ŋ', 'N');
+                result = result.Replace('Ð', 'E');
+                result = result.Replace('Ğ', 'G');
+                result = result.Replace('Ģ', 'G');
+                result = result.Replace('Ĝ', 'G');
+                result = result.Replace('Ġ', 'G');
+                result = result.Replace('Ĥ', 'H');
+                result = result.Replace('Ħ', 'H');
+                result = result.Replace('Í', 'I');
+                result = result.Replace('Ĭ', 'I');
+                result = result.Replace('Î', 'I');
+                result = result.Replace('Ï', 'I');
+                result = result.Replace('İ', 'I');
+                result = result.Replace('Ì', 'I');
+                result = result.Replace('Ī', 'I');
+                result = result.Replace('Į', 'I');
+                result = result.Replace('Ĩ', 'I');
+                result = result.Replace('Ĵ', 'J');
+                result = result.Replace('Ķ', 'K');
+                result = result.Replace('Ĺ', 'L');
+                result = result.Replace('Ľ', 'L');
+                result = result.Replace('Ļ', 'L');
+                result = result.Replace('Ŀ', 'L');
+                result = result.Replace('Ł', 'L');
+                result = result.Replace('Ĳ', 'I');
+                result = result.Replace('Œ', 'O');
+                result = result.Replace('Ń', 'N');
+                result = result.Replace('Ň', 'N');
+                result = result.Replace('Ņ', 'N');
+                result = result.Replace('Ñ', 'N');
+                result = result.Replace('Ó', 'O');
+                result = result.Replace('Ŏ', 'O');
+                result = result.Replace('Ô', 'O');
+                result = result.Replace('Ö', 'O');
+                result = result.Replace('Ò', 'O');
+                result = result.Replace('Ō', 'O');
+                result = result.Replace('Ø', 'O');
+                result = result.Replace('Õ', 'O');
+                result = result.Replace('Ő', 'O');
+                result = result.Replace('Ŕ', 'R');
+                result = result.Replace('Ř', 'R');
+                result = result.Replace('Ŗ', 'R');
+                result = result.Replace('Ś', 'S');
+                result = result.Replace('Š', 'S');
+                result = result.Replace('Ş', 'S');
+                result = result.Replace('Ŝ', 'S');
+                result = result.Replace('Ť', 'T');
+                result = result.Replace('Ţ', 'T');
+                result = result.Replace('Ŧ', 'T');
+                result = result.Replace('Þ', 'P');
+                result = result.Replace('Ů', 'U');
+                result = result.Replace('Ú', 'U');
+                result = result.Replace('Ŭ', 'U');
+                result = result.Replace('Û', 'U');
+                result = result.Replace('Ü', 'U');
+                result = result.Replace('Ű', 'U');
+                result = result.Replace('Ù', 'U');
+                result = result.Replace('Ū', 'U');
+                result = result.Replace('Ų', 'U');
+                result = result.Replace('Ũ', 'U');
+                result = result.Replace('Ŵ', 'W');
+                result = result.Replace('Ý', 'Y');
+                result = result.Replace('Ŷ', 'Y');
+                result = result.Replace('Ÿ', 'Y');
+                result = result.Replace('Ź', 'Z');
+                result = result.Replace('Ž', 'Z');
+                result = result.Replace('Ż', 'Z');
+                result = result.Replace('á', 'a');
+                result = result.Replace('ă', 'a');
+                result = result.Replace('â', 'a');
+                result = result.Replace('ä', 'a');
+                result = result.Replace('à', 'a');
+                result = result.Replace('ā', 'a');
+                result = result.Replace('ą', 'a');
+                result = result.Replace('å', 'a');
+                result = result.Replace('ã', 'a');
+                result = result.Replace('æ', 'a');
+                result = result.Replace('ć', 'c');
+                result = result.Replace('č', 'c');
+                result = result.Replace('ç', 'c');
+                result = result.Replace('ĉ', 'c');
+                result = result.Replace('ċ', 'c');
+                result = result.Replace('ď', 'd');
+                result = result.Replace('đ', 'd');
+                result = result.Replace('ı', 'i');
+                result = result.Replace('é', 'e');
+                result = result.Replace('ĕ', 'e');
+                result = result.Replace('ě', 'e');
+                result = result.Replace('ê', 'e');
+                result = result.Replace('ë', 'e');
+                result = result.Replace('ė', 'e');
+                result = result.Replace('è', 'e');
+                result = result.Replace('ē', 'e');
+                result = result.Replace('ę', 'e');
+                result = result.Replace('ŋ', 'n');
+                result = result.Replace('ð', 'e');
+                result = result.Replace('ğ', 'g');
+                result = result.Replace('ģ', 'g');
+                result = result.Replace('ĝ', 'g');
+                result = result.Replace('ġ', 'g');
+                result = result.Replace('ĥ', 'h');
+                result = result.Replace('ħ', 'h');
+                result = result.Replace('í', 'i');
+                result = result.Replace('ĭ', 'i');
+                result = result.Replace('î', 'i');
+                result = result.Replace('ï', 'i');
+                result = result.Replace('ì', 'i');
+                result = result.Replace('ī', 'i');
+                result = result.Replace('į', 'i');
+                result = result.Replace('ĩ', 'i');
+                result = result.Replace('ĵ', 'j');
+                result = result.Replace('ķ', 'k');
+                result = result.Replace('ĸ', 'k');
+                result = result.Replace('ĺ', 'l');
+                result = result.Replace('ľ', 'l');
+                result = result.Replace('ļ', 'l');
+                result = result.Replace('ŀ', 'l');
+                result = result.Replace('ł', 'l');
+                result = result.Replace('ĳ', 'i');
+                result = result.Replace('œ', 'o');
+                result = result.Replace('ſ', 's');
+                result = result.Replace('ń', 'n');
+                result = result.Replace('ň', 'n');
+                result = result.Replace('ņ', 'n');
+                result = result.Replace('ŉ', 'n');
+                result = result.Replace('ñ', 'n');
+                result = result.Replace('ó', 'o');
+                result = result.Replace('ŏ', 'o');
+                result = result.Replace('ô', 'o');
+                result = result.Replace('ö', 'o');
+                result = result.Replace('ò', 'o');
+                result = result.Replace('ō', 'o');
+                result = result.Replace('ø', 'o');
+                result = result.Replace('õ', 'o');
+                result = result.Replace('ő', 'o');
+                result = result.Replace('ŕ', 'r');
+                result = result.Replace('ř', 'r');
+                result = result.Replace('ŗ', 'r');
+                result = result.Replace('ś', 's');
+                result = result.Replace('š', 's');
+                result = result.Replace('ş', 's');
+                result = result.Replace('ŝ', 's');
+                result = result.Replace('ß', 's');
+                result = result.Replace('ť', 't');
+                result = result.Replace('ţ', 't');
+                result = result.Replace('ŧ', 't');
+                result = result.Replace('þ', 'p');
+                result = result.Replace('ů', 'u');
+                result = result.Replace('ú', 'u');
+                result = result.Replace('ŭ', 'u');
+                result = result.Replace('û', 'u');
+                result = result.Replace('ü', 'u');
+                result = result.Replace('ű', 'u');
+                result = result.Replace('ù', 'u');
+                result = result.Replace('ū', 'u');
+                result = result.Replace('ų', 'u');
+                result = result.Replace('ũ', 'u');
+                result = result.Replace('ŵ', 'w');
+                result = result.Replace('ý', 'y');
+                result = result.Replace('ŷ', 'y');
+                result = result.Replace('ÿ', 'y');
+                result = result.Replace('ź', 'z');
+                result = result.Replace('ž', 'z');
+                result = result.Replace('ż', 'z');
+            }
 
             return result;
         }
