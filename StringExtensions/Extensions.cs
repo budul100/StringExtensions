@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StringExtensions.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -12,8 +13,6 @@ namespace StringExtensions
         #region Private Fields
 
         private const string NewLineSeparators = @"[\r\n]+";
-        private const string ShrinkRemove = @"(?<!\b[aeiuoäöü]*)[aeiouäöü]|\s|\<\>";
-        private const string ShrinkSplitAt = @"[_\W]";
 
         #endregion Private Fields
 
@@ -156,12 +155,11 @@ namespace StringExtensions
             return result.ToString();
         }
 
-        public static string Shrink(this string value, int maxLength = 0)
+        public static string Shrink(this string value, int maxLength = 0, bool toCamelCases = false)
         {
-            var result = GetShrinked(
-                value: value,
+            var result = value.GetShrinked(
                 maxLength: maxLength,
-                removeWhitespaces: true);
+                toCamelCases: toCamelCases);
 
             return result;
         }
@@ -491,10 +489,9 @@ namespace StringExtensions
             {
                 if (shrinkIfNecessary)
                 {
-                    result = GetShrinked(
-                        value: value,
+                    result = value.GetShrinked(
                         maxLength: maxLength,
-                        removeWhitespaces: false);
+                        leaveWhitespaces: true);
                 }
                 else
                 {
@@ -533,68 +530,6 @@ namespace StringExtensions
             }
 
             return (T)result;
-        }
-
-        private static string GetShrinked(string value, int maxLength, bool removeWhitespaces)
-        {
-            var result = value?.Trim();
-
-            if (!result.IsEmpty()
-                && (removeWhitespaces || maxLength == 0 || value.Length > maxLength))
-            {
-                var parts = Regex.Split(
-                    input: result,
-                    pattern: ShrinkSplitAt,
-                    options: RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline)
-                    .Where(p => !p.IsEmpty()).ToArray();
-
-                var fullLength = parts
-                    .Sum(p => p.Length);
-
-                var builder = new StringBuilder();
-
-                foreach (var part in parts)
-                {
-                    var corrected = Regex.Replace(
-                        input: part,
-                        pattern: ShrinkRemove,
-                        replacement: string.Empty,
-                        options: RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-                    if (maxLength == 0)
-                    {
-                        builder.Append(corrected);
-                    }
-                    else
-                    {
-                        var partShare = (double)part.Length / fullLength;
-
-                        var partLength = part == parts.Last()
-                            ? maxLength - builder.Length
-                            : (int)Math.Ceiling(maxLength * partShare);
-                        var currentLength = partLength < corrected.Length
-                            ? partLength
-                            : corrected.Length;
-
-                        var shortened = corrected.Substring(
-                            startIndex: 0,
-                            length: currentLength);
-
-                        builder.Append(shortened);
-
-                        if (builder.Length >= maxLength)
-                        {
-                            break;
-                        }
-                    }
-                }
-
-                result = maxLength > 0 && builder.Length > maxLength
-                    ? builder.ToString().Substring(0, maxLength)
-                    : builder.ToString();
-            }
-
-            return result;
         }
 
         #endregion Private Methods

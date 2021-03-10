@@ -18,14 +18,6 @@ namespace StringExtensionsTests
         }
 
         [Test]
-        public void ShrinkWithWhitespace()
-        {
-            var result = ("Ulm Hbf").Shrink(10);
-
-            Assert.IsFalse(result.Contains(" ", comparisonType: System.StringComparison.InvariantCulture));
-        }
-
-        [Test]
         public void ToStandardChars()
         {
             var result = ("ÁĂÂÄÀĀĄÅÃÆĆČÇĈĊĎĐÉĔĚÊËĖÈĒĘŊÐĞĢĜĠĤĦÍĬÎÏİÌĪĮĨĴĶĹĽĻĿŁĲŒŃŇŅÑÓŎÔÖÒŌØÕŐŔŘŖŚŠŞŜŤŢŦÞŮÚŬÛÜŰÙŪŲŨŴÝŶŸŹŽŻáăâäàāąåãæćčçĉċďđıéĕěêëėèēęŋðğģĝġĥħíĭîïìīįĩĵķĸĺľļŀłĳœſńňņŉñóŏôöòōøõőŕřŗśšşŝßťţŧþůúŭûüűùūųũŵýŷÿźžż").ToStandardChars();
