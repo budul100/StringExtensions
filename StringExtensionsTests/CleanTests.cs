@@ -18,6 +18,28 @@ namespace StringExtensionsTests
         }
 
         [Test]
+        public void ToCamelCases()
+        {
+            var result1 = ("ABCDEF").ToCamelCases();
+
+            Assert.AreEqual(
+                result1,
+                "Abcdef");
+
+            var result2 = ("abcdef").ToCamelCases();
+
+            Assert.AreEqual(
+                result2,
+                "Abcdef");
+
+            var result3 = ("Abcdef").ToCamelCases();
+
+            Assert.AreEqual(
+                result3,
+                "Abcdef");
+        }
+
+        [Test]
         public void ToStandardChars()
         {
             var result = ("ÁĂÂÄÀĀĄÅÃÆĆČÇĈĊĎĐÉĔĚÊËĖÈĒĘŊÐĞĢĜĠĤĦÍĬÎÏİÌĪĮĨĴĶĹĽĻĿŁĲŒŃŇŅÑÓŎÔÖÒŌØÕŐŔŘŖŚŠŞŜŤŢŦÞŮÚŬÛÜŰÙŪŲŨŴÝŶŸŹŽŻáăâäàāąåãæćčçĉċďđıéĕěêëėèēęŋðğģĝġĥħíĭîïìīįĩĵķĸĺľļŀłĳœſńňņŉñóŏôöòōøõőŕřŗśšşŝßťţŧþůúŭûüűùūųũŵýŷÿźžż").ToStandardChars();

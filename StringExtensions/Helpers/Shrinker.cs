@@ -88,13 +88,14 @@ namespace StringExtensions.Helpers
             var shrinkedLength = maxLength;
 
             var orderedParts = parts
+                .Where(p => !p.Given.IsEmpty())
                 .OrderBy(p => p.Index == 0)
-                .ThenBy(p => p.Given.Length).ToArray();
+                .ThenBy(p => p.Given.Length);
 
             foreach (var orderedPart in orderedParts)
             {
                 orderedPart.Shrinked = Regex.Replace(
-                    input: orderedPart.Given,
+                    input: orderedPart.Given.Trim(),
                     pattern: ShrinkRemove,
                     replacement: string.Empty,
                     options: RegexOptions.IgnoreCase | RegexOptions.Multiline);
@@ -114,15 +115,7 @@ namespace StringExtensions.Helpers
                     && orderedPart.Index > 0
                     && orderedPart.Shrinked.Length > 0)
                 {
-                    var first = orderedPart.Shrinked.Substring(
-                        startIndex: 0,
-                        length: 1).ToUpper();
-
-                    var others = orderedPart.Shrinked.Length > 1
-                        ? orderedPart.Shrinked.Substring(1).ToLower()
-                        : string.Empty;
-
-                    orderedPart.Shrinked = first + others;
+                    orderedPart.Shrinked = orderedPart.Shrinked.ToCamelCases();
                 }
 
                 givenLength -= orderedPart.Given.Length;

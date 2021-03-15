@@ -239,6 +239,28 @@ namespace StringExtensions
             return result;
         }
 
+        public static string ToCamelCases(this string value)
+        {
+            var result = value;
+
+            value = value?.Trim();
+
+            if (!value.IsEmpty())
+            {
+                var first = value.Substring(
+                    startIndex: 0,
+                    length: 1).ToUpper();
+
+                var others = value.Length > 1
+                    ? value.Substring(1).ToLower()
+                    : string.Empty;
+
+                result = first + others;
+            }
+
+            return result;
+        }
+
         public static string ToStandardChars(this string value)
         {
             var result = value;
