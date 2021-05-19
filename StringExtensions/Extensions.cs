@@ -62,6 +62,46 @@ namespace StringExtensions
             return result;
         }
 
+        public static string GetCommon(this IEnumerable<string> values)
+        {
+            var result = default(string);
+
+            var relevants = values?
+                .Where(v => !v.IsEmpty())
+                .Distinct()
+                .OrderBy(v => v.Length).ToArray();
+
+            if (relevants?.Any() ?? false)
+            {
+                if (relevants.Length > 1)
+                {
+                    var subStrings = relevants.First()?.GetSubStrings()
+                        .OrderByDescending(s => s.Length).ToArray();
+
+                    var others = relevants.Skip(1).ToArray();
+
+                    result = default;
+
+                    foreach (var subString in subStrings)
+                    {
+                        var isValid = others.All(s => s.Contains(subString));
+
+                        if (isValid)
+                        {
+                            result = subString;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    result = relevants.Single();
+                }
+            }
+
+            return result;
+        }
+
         public static bool IsAllDigits(this string value)
         {
             var result = value?.All(char.IsDigit) ?? true;
@@ -552,6 +592,21 @@ namespace StringExtensions
             }
 
             return (T)result;
+        }
+
+        private static IEnumerable<string> GetSubStrings(this string value)
+        {
+            for (var index = 0; index < value.Length; index++)
+            {
+                for (var length = 2; length < value.Length - index + 1; length++)
+                {
+                    var result = value.Substring(
+                        startIndex: index,
+                        length: length);
+
+                    yield return result;
+                }
+            }
         }
 
         #endregion Private Methods
