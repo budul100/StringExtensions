@@ -108,6 +108,17 @@ namespace StringExtensionsTests
         }
 
         [Test]
+        public void SplitStringWithPipe()
+        {
+            var result1 = ("45").Split<string>(@"\|").ToArray();
+            var result2 = (@"4|5").Split<string>(@"\|").ToArray();
+
+            Assert.IsTrue(result1.Single() == "45");
+            Assert.IsTrue(result2.First() == "4");
+            Assert.IsTrue(result2.Last() == "5");
+        }
+
+        [Test]
         public void SplitWithCharDelimiterToInt()
         {
             var result = ("1,2,3").Split<int>(',').ToArray();
