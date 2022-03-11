@@ -18,7 +18,16 @@ namespace StringExtensionsTests
         [Test]
         public void CommonString()
         {
-            var list = new string[] { "ToCommondays", "MonCommonday_", "", string.Empty, default, "TuesCommonda", "WednesCommon_day" };
+            var list = new string[]
+            {
+                "ToCommondays",
+                "MonCommonday_",
+                "",
+                string.Empty,
+                default,
+                "TuesCommonda",
+                "WednesCommon_day"
+            };
 
             var result = list.GetCommon();
 

@@ -14,6 +14,8 @@ namespace StringExtensions
 
         private const string NewLineSeparators = @"[\r\n]+";
 
+        private static readonly Regex nonConsecutiveNumberRegex = new Regex(@"\d\D\d");
+
         #endregion Private Fields
 
         #region Public Methods
@@ -75,7 +77,7 @@ namespace StringExtensions
             {
                 if (relevants.Length > 1)
                 {
-                    var subStrings = relevants.First()?.GetSubStrings()
+                    var subStrings = relevants[0]?.GetSubStrings()
                         .OrderByDescending(s => s.Length).ToArray();
 
                     var others = relevants.Skip(1).ToArray();
@@ -104,7 +106,25 @@ namespace StringExtensions
 
         public static bool IsAllDigits(this string value)
         {
-            var result = value?.All(char.IsDigit) ?? true;
+            var result = false;
+
+            if (!value.IsEmpty())
+            {
+                result = value.All(char.IsDigit);
+            }
+
+            return result;
+        }
+
+        public static bool IsConsecutiveDigits(this string value)
+        {
+            var result = false;
+
+            if (!value.IsEmpty())
+            {
+                result = value.Any(char.IsDigit)
+                    && !nonConsecutiveNumberRegex.IsMatch(value);
+            }
 
             return result;
         }
@@ -166,7 +186,7 @@ namespace StringExtensions
 
                 var characters = value.Normalize(NormalizationForm.FormD).ToCharArray();
 
-                foreach (char character in characters)
+                foreach (var character in characters)
                 {
                     if (CharUnicodeInfo.GetUnicodeCategory(character) != UnicodeCategory.NonSpacingMark)
                     {
@@ -246,7 +266,7 @@ namespace StringExtensions
             return result;
         }
 
-        public static IEnumerable<String> Split(this string value, int length)
+        public static IEnumerable<string> Split(this string value, int length)
         {
             if (length <= 0)
             {
@@ -289,10 +309,10 @@ namespace StringExtensions
             {
                 var first = value.Substring(
                     startIndex: 0,
-                    length: 1).ToUpper();
+                    length: 1).ToUpperInvariant();
 
                 var others = value.Length > 1
-                    ? value.Substring(1).ToLower()
+                    ? value.Substring(1).ToLowerInvariant()
                     : string.Empty;
 
                 result = first + others;
