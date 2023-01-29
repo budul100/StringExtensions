@@ -15,6 +15,7 @@ namespace StringExtensions
         private const string NewLineSeparators = @"[\r\n]+";
 
         private static readonly Regex nonConsecutiveNumberRegex = new Regex(@"\d\D\d");
+        private static readonly Regex startIndexesRegex = new Regex(@"(?<=\b)[\S]+");
 
         #endregion Private Fields
 
@@ -69,15 +70,14 @@ namespace StringExtensions
             var result = default(string);
 
             var relevants = values?
-                .Where(v => !v.IsEmpty())
-                .Distinct()
+                .Where(v => !v.IsEmpty()).Distinct()
                 .OrderBy(v => v.Length).ToArray();
 
             if (relevants?.Any() ?? false)
             {
                 if (relevants.Length > 1)
                 {
-                    var subStrings = relevants[0]?.GetSubStrings()
+                    var subStrings = relevants[0].GetSubStrings()
                         .OrderByDescending(s => s.Length).ToArray();
 
                     var others = relevants.Skip(1).ToArray();
@@ -616,16 +616,20 @@ namespace StringExtensions
 
         private static IEnumerable<string> GetSubStrings(this string value)
         {
-            for (var index = 0; index < value.Length; index++)
+            var startsMatch = startIndexesRegex.Match(value);
+
+            while (startsMatch.Success)
             {
-                for (var length = 2; length < value.Length - index + 1; length++)
+                for (var length = 2; length < value.Length - startsMatch.Index + 1; length++)
                 {
                     var result = value.Substring(
-                        startIndex: index,
+                        startIndex: startsMatch.Index,
                         length: length);
 
                     yield return result;
                 }
+
+                startsMatch = startsMatch.NextMatch();
             }
         }
 

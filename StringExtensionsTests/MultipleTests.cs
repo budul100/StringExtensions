@@ -16,17 +16,32 @@ namespace StringExtensionsTests
         }
 
         [Test]
-        public void CommonString()
+        public void GetCommonStringWithoutSucces()
         {
             var list = new string[]
             {
-                "ToCommondays",
-                "MonCommonday_",
+                "AHausen",
+                "BHausen",
+                "",
+            };
+
+            var result = list.GetCommon();
+
+            Assert.IsTrue(string.IsNullOrWhiteSpace(result));
+        }
+
+        [Test]
+        public void GetCommonStringWithSucces()
+        {
+            var list = new string[]
+            {
+                "To Commondays",
+                "Mon Commonday_",
                 "",
                 string.Empty,
                 default,
-                "TuesCommonda",
-                "WednesCommon_day"
+                "Tues Commonda",
+                "Wednes Common_day"
             };
 
             var result = list.GetCommon();
