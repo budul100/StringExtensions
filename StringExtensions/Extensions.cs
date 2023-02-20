@@ -12,6 +12,7 @@ namespace StringExtensions
     {
         #region Private Fields
 
+        private const int CommonLengthMin = 1;
         private const string NewLineSeparators = @"[\r\n]+";
 
         private static readonly Regex nonConsecutiveNumberRegex = new Regex(@"\d\D\d");
@@ -620,7 +621,7 @@ namespace StringExtensions
 
             while (startsMatch.Success)
             {
-                for (var length = 2; length < value.Length - startsMatch.Index + 1; length++)
+                for (var length = CommonLengthMin; length < value.Length - startsMatch.Index + 1; length++)
                 {
                     var result = value.Substring(
                         startIndex: startsMatch.Index,

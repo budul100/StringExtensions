@@ -16,6 +16,20 @@ namespace StringExtensionsTests
         }
 
         [Test]
+        public void GetCommonShortString()
+        {
+            var list = new string[]
+            {
+                "A1",
+                "A2"
+            };
+
+            var result = list.GetCommon();
+
+            Assert.IsTrue(result == "A");
+        }
+
+        [Test]
         public void GetCommonStringWithoutSucces()
         {
             var list = new string[]
