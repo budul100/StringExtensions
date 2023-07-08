@@ -78,23 +78,12 @@ namespace StringExtensions
             {
                 if (relevants.Length > 1)
                 {
-                    var subStrings = relevants[0].GetSubStrings()
-                        .OrderByDescending(s => s.Length).ToArray();
-
-                    var others = relevants.Skip(1).ToArray();
-
-                    result = default;
-
-                    foreach (var subString in subStrings)
-                    {
-                        var isValid = others.All(s => s.Contains(subString));
-
-                        if (isValid)
-                        {
-                            result = subString;
-                            break;
-                        }
-                    }
+                    result = relevants
+                        .Select(v => (Value: v, Subs: v.GetSubStrings()))
+                        .SelectMany(v => v.Subs.Select(s => (v.Value, Sub: s)))
+                        .GroupBy(s => s.Sub)
+                        .Where(g => g.Count() == relevants.Length)
+                        .OrderByDescending(g => g.Key.Length).FirstOrDefault()?.Key;
                 }
                 else
                 {
